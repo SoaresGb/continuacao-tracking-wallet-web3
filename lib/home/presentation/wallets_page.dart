@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foxbit_tracking_web3_flutter/home/domain/model/local_wallet.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/controller.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/loading_page.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/widgets/new_wallet_form.dart';

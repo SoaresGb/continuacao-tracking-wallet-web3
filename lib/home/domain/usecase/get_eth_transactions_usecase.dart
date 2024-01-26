@@ -2,11 +2,13 @@ import 'package:foxbit_tracking_web3_flutter/home/domain/repository/eth_reposito
 import 'package:web3dart/web3dart.dart';
 
 class GetEthTransactionsUsecase {
+  GetEthTransactionsUsecase({
+    required IEthRepository repository,
+    required this.walletAddress,
+  }) : _repository = repository;
+
   final IEthRepository _repository;
   final String walletAddress;
-  GetEthTransactionsUsecase(
-      {required IEthRepository repository, required this.walletAddress})
-      : _repository = repository;
 
   Future<List<TransactionInformation>> call() async {
     List<TransactionInformation> transactionsDetails = [];
@@ -14,8 +16,10 @@ class GetEthTransactionsUsecase {
       final transactionLogs = await _repository.fetchLogs(walletAddress);
 
       for (var transactionLog in transactionLogs) {
-        TransactionInformation? transactionInformation =
-            await _repository.getHashDetails(transactionLog.hash);
+        final transactionInformation = await _repository.getHashDetails(
+          transactionLog.hash,
+        );
+
         if (transactionInformation != null) {
           transactionsDetails.add(transactionInformation);
         }

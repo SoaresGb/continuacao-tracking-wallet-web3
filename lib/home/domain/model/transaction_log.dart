@@ -97,8 +97,10 @@ class TransactionLog {
     String hexToDecimal(String hexVal) {
       try {
         if (hexVal == '0x') return '0';
-        return BigInt.parse(hexVal.replaceFirst('0x', ''), radix: 16)
-            .toString();
+        return BigInt.parse(
+          hexVal.replaceFirst('0x', ''),
+          radix: 16,
+        ).toString();
       } catch (e) {
         return "Error";
       }

@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 class EthRepository implements IEthRepository {
   late Web3Client ethClient;
-  final String rpcUrl =
+  final rpcUrl =
       'https://mainnet.infura.io/v3/ea9b34aac1524774be506054bd3b8984';
 
   void initializeClient() {
@@ -25,7 +25,7 @@ class EthRepository implements IEthRepository {
 
     if (response.statusCode == 200) {
       List<TransactionLog> transactionLogs = [];
-      
+
       for (var item in json.decode(response.body)['result']) {
         transactionLogs.add(TransactionLog.fromJson(item));
       }

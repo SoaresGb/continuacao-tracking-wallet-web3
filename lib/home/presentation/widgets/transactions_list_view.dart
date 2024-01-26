@@ -3,9 +3,10 @@ import 'package:foxbit_tracking_web3_flutter/home/presentation/widgets/transacti
 import 'package:web3dart/web3dart.dart';
 
 class TransactionListView extends StatefulWidget {
-  const TransactionListView({super.key, required this.transactions, required this.wallet});
+  const TransactionListView(
+      {super.key, required this.transactions, required this.wallet});
 
-  final List<TransactionInformation> transactions; 
+  final List<TransactionInformation> transactions;
   final String wallet;
 
   @override
@@ -13,7 +14,6 @@ class TransactionListView extends StatefulWidget {
 }
 
 class _TransactionState extends State<TransactionListView> {
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -22,21 +22,28 @@ class _TransactionState extends State<TransactionListView> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text('Transactions (${widget.transactions.length}):', style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(
+              'Transactions (${widget.transactions.length}):',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           Expanded(
             child: ListView.separated(
               separatorBuilder: (context, index) => const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Divider(height: 2),
-              ), 
+              ),
               itemCount: widget.transactions.length,
               itemBuilder: (context, index) {
-                return TransactionListTile(transaction: widget.transactions[index], wallet: widget.wallet);
+                return TransactionListTile(
+                  transaction: widget.transactions[index],
+                  wallet: widget.wallet,
+                );
               },
-              ),
+            ),
           ),
-      ],),
+        ],
+      ),
     );
   }
 }
