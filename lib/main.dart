@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxbit_tracking_web3_flutter/home/domain/model/local_wallet.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/controller.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/wallets_page.dart';
 
@@ -60,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isBtc = false;
     return Scaffold(
       appBar: AppBar(backgroundColor: Theme.of(context).primaryColor),
       body: Padding(
@@ -101,17 +103,27 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ),
+                      CheckboxMenuButton(
+                          value: isBtc,
+                          onChanged: (value) {
+                            setState(() {
+                              isBtc = value!;
+                            });
+                          },
+                          child: const Text("Bitcoin")),
                       ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               AppController.instance
                                   .registerWallet(
-                                      walletAddressController.text,
-                                      walletNicknameController.text.isEmpty
-                                          ? AppController.instance
-                                              .formattingAddress(
-                                                  walletAddressController.text)
-                                          : walletNicknameController.text)
+                                    walletAddressController.text,
+                                    walletNicknameController.text.isEmpty
+                                        ? AppController.instance
+                                            .formattingAddress(
+                                                walletAddressController.text)
+                                        : walletNicknameController.text,
+                                    isBtc ? WalletType.btc : WalletType.eth,
+                                  )
                                   .then((value) =>
                                       Navigator.of(context).pushReplacement(
                                         MaterialPageRoute<void>(

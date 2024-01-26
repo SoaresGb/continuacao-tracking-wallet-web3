@@ -1,5 +1,4 @@
 class TransactionLog {
-
   final String blockNumber;
   final String timeStamp;
   final String hash;
@@ -69,7 +68,30 @@ class TransactionLog {
     );
   }
 
-  // get formatedAddress => address.replaceRange(7, 35, '...');
+  factory TransactionLog.fromBTCJson(Map<String, dynamic> json) {
+    return TransactionLog(
+      blockNumber: json['block_height'],
+      timeStamp: json['block_signed_at'],
+      hash: json['tx_hash'],
+      nonce: '', // This field is not provided in the provided JSON
+      blockHash: json['block_hash'],
+      transactionIndex: json['tx_idx'],
+      from: '', // This field is not provided in the provided JSON
+      to: json['address'],
+      value: json['value'],
+      gas: '', // This field is not provided in the provided JSON
+      gasPrice: '', // This field is not provided in the provided JSON
+      isError: '', // This field is not provided in the provided JSON
+      txReceiptStatus: '', // This field is not provided in the provided JSON
+      input: '', // This field is not provided in the provided JSON
+      contractAddress: '', // This field is not provided in the provided JSON
+      cumulativeGasUsed: '', // This field is not provided in the provided JSON
+      gasUsed: '', // This field is not provided in the provided JSON
+      confirmations: '', // This field is not provided in the provided JSON
+      methodId: '', // This field is not provided in the provided JSON
+      functionName: '', // This field is not provided in the provided JSON
+    );
+  }
 
   factory TransactionLog.readable(TransactionLog log) {
     String hexToDecimal(String hexVal) {

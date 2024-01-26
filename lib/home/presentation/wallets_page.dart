@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foxbit_tracking_web3_flutter/home/domain/model/local_wallet.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/controller.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/loading_page.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/widgets/wallet_list_tile.dart';
@@ -26,6 +27,7 @@ class WalletPageState extends State<WalletPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isBtc = false;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -117,16 +119,26 @@ class WalletPageState extends State<WalletPage> {
                               ),
                             ),
                           ),
+                          CheckboxMenuButton(
+                              value: isBtc,
+                              onChanged: (value) {
+                                setState(() {
+                                  isBtc = value!;
+                                });
+                              },
+                              child: const Text("Bitcoin")),
                           ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   await controller.registerWallet(
-                                      addressController.text,
-                                      nameController.text.isEmpty
-                                          ? AppController.instance
-                                              .formattingAddress(
-                                                  addressController.text)
-                                          : nameController.text);
+                                    addressController.text,
+                                    nameController.text.isEmpty
+                                        ? AppController.instance
+                                            .formattingAddress(
+                                                addressController.text)
+                                        : nameController.text,
+                                    isBtc ? WalletType.btc : WalletType.eth,
+                                  );
                                   controller
                                       .getLocalWallets()
                                       .then((value) => setState(() {}));

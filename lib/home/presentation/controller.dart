@@ -9,6 +9,7 @@ import 'package:foxbit_tracking_web3_flutter/home/domain/usecase/get_eth_balance
 import 'package:foxbit_tracking_web3_flutter/home/domain/usecase/get_eth_transactions_usecase.dart';
 import 'package:foxbit_tracking_web3_flutter/home/domain/usecase/get_multiple_wallets_usecase.dart';
 import 'package:foxbit_tracking_web3_flutter/home/domain/usecase/save_wallet_usecase.dart';
+import 'package:foxbit_tracking_web3_flutter/services/btc_client.dart';
 import 'package:web3dart/web3dart.dart';
 
 class AppController {
@@ -17,6 +18,7 @@ class AppController {
 
   static AppController get instance {
     _instance ??= AppController._();
+    // BTCClient().fetchTransactions("bc1qcueszthdstu99s2vtrlpz9melrhv208cre4xg9");
     return _instance!;
   }
 
@@ -56,9 +58,14 @@ class AppController {
     Navigator.of(context).pop();
   }
 
-  Future<void> registerWallet(String address, String name) async {
+  Future<void> registerWallet(
+      String address, String name, WalletType type) async {
     await SaveWalletUsecase(repository: LocalStorageRepository())
-        .call(LocalWallet(walletName: name, walletAddress: address));
+        .call(LocalWallet(
+      walletName: name,
+      walletAddress: address,
+      type: type,
+    ));
   }
 
   String weiToEther(BigInt weiAmount) {
