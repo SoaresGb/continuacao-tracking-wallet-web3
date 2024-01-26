@@ -19,10 +19,8 @@ class _ViewWalletBalancePageState extends State<ViewWalletBalancePage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        controller.isLoading = true;
-      });
-      controller.getWalletInfo(widget.address).then((value) => setState(() {}));
+      setState(() => controller.isLoading = true);
+      controller.getWalletInfo(widget.address).then((_) => setState(() {}));
     });
 
     super.initState();
@@ -31,35 +29,44 @@ class _ViewWalletBalancePageState extends State<ViewWalletBalancePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new),
-            onPressed: () => controller.backPage(context),
-          ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new),
+          onPressed: () => controller.backPage(context),
         ),
-        body: controller.isLoading
-            ? Container(
-                height: MediaQuery.of(context).size.height,
-                color: Colors.white,
-                child: const LoadingWidget())
-            : Padding(
-                padding:
-                    EdgeInsets.all(MediaQuery.of(context).size.width * 0.1),
-                child: Column(
-                  children: <Widget>[
-                    HeaderBalanceContainer(
-                        coinName: controller.transaction.coinName,
-                        userBalance: controller.transaction.balance),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: Divider(height: 2),
-                    ),
-                    TransactionListView(
-                        transactions: controller.transactionsInfo,
-                        wallet: widget.address),
-                  ],
+      ),
+      body: Builder(
+        builder: (_) {
+          if (controller.isLoading) {
+            return Container(
+              height: MediaQuery.of(context).size.height,
+              color: Colors.white,
+              child: const LoadingWidget(),
+            );
+          }
+
+          return Padding(
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.1),
+            child: Column(
+              children: <Widget>[
+                HeaderBalanceContainer(
+                  coinName: controller.transaction.coinName,
+                  userBalance: controller.transaction.balance,
                 ),
-              ));
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Divider(height: 2),
+                ),
+                TransactionListView(
+                  transactions: controller.transactionsInfo,
+                  wallet: widget.address,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }

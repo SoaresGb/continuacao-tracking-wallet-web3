@@ -6,17 +6,15 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-      Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Lottie.asset('assets/loading.json', height: MediaQuery.of(context).size.shortestSide * 0.5),
-            const CircularProgressIndicator(),
-          ],
-        ),
-      
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset('assets/loading.json',
+              height: MediaQuery.of(context).size.shortestSide * 0.5),
+          const CircularProgressIndicator(),
+        ],
+      ),
     );
   }
-
 }

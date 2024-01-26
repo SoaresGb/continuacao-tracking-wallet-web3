@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxbit_tracking_web3_flutter/home/domain/model/local_wallet.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/controller.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/wallets_page.dart';
+import 'package:foxbit_tracking_web3_flutter/home/presentation/widgets/new_wallet_form.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,10 +37,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController walletAddressController = TextEditingController();
-  final TextEditingController walletNicknameController =
-      TextEditingController();
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -57,91 +54,32 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  final _formKey = GlobalKey<FormState>();
-
   @override
-  Widget build(BuildContext context) {
-    bool isBtc = false;
-    return Scaffold(
-      appBar: AppBar(backgroundColor: Theme.of(context).primaryColor),
-      body: Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                  height: 100,
-                  width: 200,
-                  child: Image.asset(
-                    "assets/foxbittracking.png",
-                    fit: BoxFit.fitWidth,
-                  )),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.12),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextFormField(
-                        validator: (text) =>
-                            AppController.instance.validator(text ?? ''),
-                        controller: walletAddressController,
-                        decoration: const InputDecoration(
-                          hintText: 'Digite o endereço de sua carteira',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: TextFormField(
-                          controller: walletNicknameController,
-                          decoration: const InputDecoration(
-                            hintText: 'Apelido da carteira',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      CheckboxMenuButton(
-                          value: isBtc,
-                          onChanged: (value) {
-                            setState(() {
-                              isBtc = value!;
-                            });
-                          },
-                          child: const Text("Bitcoin")),
-                      ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              AppController.instance
-                                  .registerWallet(
-                                    walletAddressController.text,
-                                    walletNicknameController.text.isEmpty
-                                        ? AppController.instance
-                                            .formattingAddress(
-                                                walletAddressController.text)
-                                        : walletNicknameController.text,
-                                    isBtc ? WalletType.btc : WalletType.eth,
-                                  )
-                                  .then((value) =>
-                                      Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute<void>(
-                                          builder: (BuildContext context) =>
-                                              const WalletPage(),
-                                        ),
-                                      ));
-                            }
-                          },
-                          child: const Text('Registrar')),
-                    ],
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(backgroundColor: Theme.of(context).primaryColor),
+        body: Padding(
+          padding: const EdgeInsets.all(50.0),
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                    height: 100,
+                    width: 200,
+                    child: Image.asset(
+                      "assets/foxbittracking.png",
+                      fit: BoxFit.fitWidth,
+                    )),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.12,
                   ),
-                ),
-              )
-            ],
+                  child: NewWallet(
+                    controller: AppController.instance,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

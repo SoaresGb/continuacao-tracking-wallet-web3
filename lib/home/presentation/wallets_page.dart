@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foxbit_tracking_web3_flutter/home/domain/model/local_wallet.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/controller.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/loading_page.dart';
+import 'package:foxbit_tracking_web3_flutter/home/presentation/widgets/new_wallet_form.dart';
 import 'package:foxbit_tracking_web3_flutter/home/presentation/widgets/wallet_list_tile.dart';
 
 class WalletPage extends StatefulWidget {
@@ -12,9 +13,6 @@ class WalletPage extends StatefulWidget {
 }
 
 class WalletPageState extends State<WalletPage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-
   final controller = AppController.instance;
 
   @override
@@ -22,8 +20,6 @@ class WalletPageState extends State<WalletPage> {
     AppController.instance.getLocalWallets().then((value) => setState(() {}));
     super.initState();
   }
-
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +62,9 @@ class WalletPageState extends State<WalletPage> {
                   right: MediaQuery.of(context).size.width * 0.1,
                   bottom: MediaQuery.of(context).size.height * 0.1,
                 ),
-                child: _newWallet(),
+                child: NewWallet(
+                  controller: controller,
+                ),
               )
             ],
           );
@@ -109,57 +107,6 @@ class WalletPageState extends State<WalletPage> {
           child: WalletListTile(
             wallet: controller.savedWallets[index],
           ),
-        ),
-      );
-
-  Widget _newWallet() => Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            TextFormField(
-              validator: (text) => AppController.instance.validator(text ?? ''),
-              controller: addressController,
-              decoration: const InputDecoration(
-                hintText: 'Digite o endereço de sua carteira',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: TextFormField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  hintText: 'Apelido da carteira',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            CheckboxMenuButton(
-              value: controller.isBtc,
-              onChanged: (value) => setState(() => controller.isBtc = value!),
-              child: const Text("Bitcoin"),
-            ),
-            ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    await controller.registerWallet(
-                      addressController.text,
-                      nameController.text.isEmpty
-                          ? AppController.instance
-                              .formattingAddress(addressController.text)
-                          : nameController.text,
-                      controller.isBtc ? WalletType.btc : WalletType.eth,
-                    );
-                    controller
-                        .getLocalWallets()
-                        .then((value) => setState(() {}));
-                    addressController.clear();
-                    nameController.clear();
-                  }
-                },
-                child: const Text('Registrar')),
-          ],
         ),
       );
 }

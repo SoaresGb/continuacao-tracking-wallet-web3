@@ -26,8 +26,13 @@ class AppController {
   late TransactionModel transaction;
   late List<LocalWallet> savedWallets;
 
+  final nameController = TextEditingController();
+  final addressController = TextEditingController();
+
   bool isLoading = true;
   bool isBtc = false;
+
+  final formKey = GlobalKey<FormState>();
 
   Future<void> getWalletInfo(String address) async {
     await getBalance(address);
@@ -38,7 +43,9 @@ class AppController {
 
   Future<EtherAmount> getBalance(String address) async {
     final getBalanceusecase = GetEthBalanceUsecase(
-        repository: EthRepository(), walletAddress: address);
+      repository: EthRepository(),
+      walletAddress: address,
+    );
 
     final amount = await getBalanceusecase.call();
 
@@ -61,6 +68,21 @@ class AppController {
   void backPage(BuildContext context) {
     isLoading = true;
     Navigator.of(context).pop();
+  }
+
+  Future<void> addWallet(VoidCallback callback) async {
+    if (formKey.currentState!.validate()) {
+      await registerWallet(
+        addressController.text,
+        nameController.text.isEmpty
+            ? AppController.instance.formattingAddress(addressController.text)
+            : nameController.text,
+        isBtc ? WalletType.btc : WalletType.eth,
+      );
+      getLocalWallets().then((_) => callback.call());
+      addressController.clear();
+      nameController.clear();
+    }
   }
 
   Future<void> registerWallet(
