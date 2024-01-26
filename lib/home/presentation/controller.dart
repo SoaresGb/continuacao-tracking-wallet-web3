@@ -9,7 +9,6 @@ import 'package:foxbit_tracking_web3_flutter/home/domain/usecase/get_eth_balance
 import 'package:foxbit_tracking_web3_flutter/home/domain/usecase/get_eth_transactions_usecase.dart';
 import 'package:foxbit_tracking_web3_flutter/home/domain/usecase/get_multiple_wallets_usecase.dart';
 import 'package:foxbit_tracking_web3_flutter/home/domain/usecase/save_wallet_usecase.dart';
-import 'package:foxbit_tracking_web3_flutter/services/btc_client.dart';
 import 'package:web3dart/web3dart.dart';
 
 class AppController {
@@ -28,6 +27,7 @@ class AppController {
   late List<LocalWallet> savedWallets;
 
   bool isLoading = true;
+  bool isBtc = false;
 
   Future<void> getWalletInfo(String address) async {
     await getBalance(address);
@@ -43,13 +43,18 @@ class AppController {
     final amount = await getBalanceusecase.call();
 
     transaction = TransactionModel(
-        hash: address, coinName: 'Eth', balance: amount.getInWei);
+      hash: address,
+      coinName: 'Eth',
+      balance: amount.getInWei,
+    );
     return amount;
   }
 
   Future<void> getTransactions(String address) async {
     final getTransactionUsecase = GetEthTransactionsUsecase(
-        repository: EthRepository(), walletAddress: address);
+      repository: EthRepository(),
+      walletAddress: address,
+    );
     transactionsInfo = await getTransactionUsecase.call();
   }
 
@@ -59,13 +64,17 @@ class AppController {
   }
 
   Future<void> registerWallet(
-      String address, String name, WalletType type) async {
-    await SaveWalletUsecase(repository: LocalStorageRepository())
-        .call(LocalWallet(
-      walletName: name,
-      walletAddress: address,
-      type: type,
-    ));
+    String address,
+    String name,
+    WalletType type,
+  ) async {
+    await SaveWalletUsecase(repository: LocalStorageRepository()).call(
+      LocalWallet(
+        walletName: name,
+        walletAddress: address,
+        type: type,
+      ),
+    );
   }
 
   String weiToEther(BigInt weiAmount) {
